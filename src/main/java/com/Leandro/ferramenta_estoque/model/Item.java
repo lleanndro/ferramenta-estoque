@@ -36,7 +36,7 @@ public class Item {
     private String subCategoria;
 
     @Column(name = "quantidade")
-    private Integer quantidade;
+    private Double quantidade;
 
     public Item() {
 
@@ -70,13 +70,13 @@ public class Item {
         return unidadeMedida;
     }
 
-    public Integer getQuantidade() {
+    public Double getQuantidade() {
         return quantidade;
     }
 
-    
 
-    public void setQuantidade(Integer quantidade) {
+
+    public void setQuantidade(Double quantidade) {
         this.quantidade = quantidade;
     }
 
