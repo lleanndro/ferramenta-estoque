@@ -38,6 +38,17 @@ public class Item {
     @Column(name = "quantidade")
     private Double quantidade;
 
+    @Column(name = "ativo")
+    private Boolean ativo;
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
     public Item() {
 
     }
