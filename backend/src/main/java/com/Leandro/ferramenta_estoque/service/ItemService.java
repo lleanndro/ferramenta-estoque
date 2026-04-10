@@ -8,6 +8,7 @@ import com.Leandro.ferramenta_estoque.model.Item;
 import com.Leandro.ferramenta_estoque.repository.ItemRepository;
 import com.Leandro.ferramenta_estoque.exception.DuplicidadeNomeException;
 import com.Leandro.ferramenta_estoque.exception.IdNaoEncontradoException;
+import com.Leandro.ferramenta_estoque.exception.NomeNaoEncontradoException;
 
 @Service
 public class ItemService {
@@ -39,6 +40,10 @@ public class ItemService {
 
     public Item buscarPorId(Long id) {
         return repository.findById(id).orElseThrow(() -> new IdNaoEncontradoException(id));
+    }
+
+    public Item buscarPorNome(String nome){
+        return repository.findByNome(nome).orElseThrow(()-> new NomeNaoEncontradoException(nome));
     }
 
     public void deletarItem(Long id){

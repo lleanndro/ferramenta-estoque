@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ItemTabela from "../components/ItemTabela";
-import {listarTodosOsItens} from "../services/itemService";
+import {listarTodosOsItens, deletarItem} from "../services/itemService";
 
 
 function ItensPage(){
@@ -18,6 +18,11 @@ function ItensPage(){
         }finally{
             setCarregando(false);
         }
+    }   
+
+    async function handlerDeletar(id) {
+        await deletarItem(id);
+        carregarItens();
     }
 
     useEffect(()=>{
@@ -34,7 +39,7 @@ function ItensPage(){
     return(
         <div>
             <h1>Itens cadastrados</h1>
-            <ItemTabela itens={itens}/>
+            <ItemTabela itens={itens} onDeletar={handlerDeletar}/>
         </div>
     )
 }

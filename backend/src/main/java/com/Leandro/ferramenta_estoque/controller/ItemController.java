@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Leandro.ferramenta_estoque.service.ItemService;
+
+import jakarta.validation.Valid;
+
 import com.Leandro.ferramenta_estoque.model.Item;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 
-
-/// porque no post mapping o item não é passado como parametro na url como no get?
 
 @RestController
 @RequestMapping("/itens")
@@ -43,9 +44,15 @@ public class ItemController {
         Item itemBuscado = itemService.buscarPorId(id);
         return ResponseEntity.ok(itemBuscado);
     }
+    
+    @GetMapping("buscar/{nome}")
+    public ResponseEntity<Item> buscarPorNome(@PathVariable String nome){
+        Item itemBuscado = itemService.buscarPorNome(nome);
+        return ResponseEntity.ok(itemBuscado);
+    }
 
     @PostMapping
-    public ResponseEntity<Item> cadastrarItem(@RequestBody Item item){
+    public ResponseEntity<Item> cadastrarItem(@Valid @RequestBody Item item){
         Item itemCadastrado = itemService.cadastrarItem(item);
         return ResponseEntity.status(201).body(itemCadastrado);
     }

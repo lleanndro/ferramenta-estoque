@@ -1,5 +1,6 @@
 package com.Leandro.ferramenta_estoque.model;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "itens")
@@ -16,25 +21,30 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Nome é obrigatório")
     @Column(name = "nome", nullable = false)
     private String nome;
 
     @Column(name = "preco_medio")
     private Double precoMedio;
 
+    @Positive(message = "Preço deve ser maior que zero")
     @Column(name = "ultimo_preco")
     private Double ultimoPreco;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "unidade_medida")
+    @NotNull(message = "Unidade de medida é obrigatória")
     private UnidadeMedida unidadeMedida;
 
+    @NotBlank (message = "Categoria é obrigatória")
     @Column(name = "categoria")
     private String categoria;
 
     @Column(name = "sub_categoria")
     private String subCategoria;
 
+    @PositiveOrZero (message = "Quantidade deve ser maior que zero")
     @Column(name = "quantidade")
     private Double quantidade;
 
@@ -84,8 +94,6 @@ public class Item {
     public Double getQuantidade() {
         return quantidade;
     }
-
-
 
     public void setQuantidade(Double quantidade) {
         this.quantidade = quantidade;

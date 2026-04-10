@@ -1,5 +1,5 @@
-function itemTabela({itens}){
-    return(
+function ItemTabela({ itens, onDeletar }) {
+    return (
         <table>
             <thead>
                 <tr>
@@ -12,18 +12,21 @@ function itemTabela({itens}){
                 </tr>
             </thead>
             <tbody>
-                {itens.map(item =>(
+                {itens.map(item => (
                     <tr key={item.id}>
                         <td>{item.nome}</td>
                         <td>{item.categoria}</td>
                         <td>{item.subCategoria}</td>
                         <td>{item.unidadeMedida}</td>
                         <td>{item.quantidade}</td>
-                        <td>{item.ativo ? "Ativo":"Inativo"}</td>
+                        <td>{item.ativo ? "Ativo" : "Inativo"}</td>
+                        <td>
+                            <button onClick={() => onDeletar(item.id)}>Excluir Item</button>
+                        </td>
                     </tr>
-                    ))}
+                ))}
             </tbody>
-        </table>     
+        </table>
     );
 }
-export default itemTabela;
+export default ItemTabela;
