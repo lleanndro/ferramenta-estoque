@@ -1,5 +1,7 @@
 package com.Leandro.ferramenta_estoque.model;
 
+import java.math.BigDecimal;
+
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,11 +28,11 @@ public class Item {
     private String nome;
 
     @Column(name = "preco_medio")
-    private Double precoMedio;
+    private BigDecimal precoMedio;
 
     @Positive(message = "Preço deve ser maior que zero")
     @Column(name = "ultimo_preco")
-    private Double ultimoPreco;
+    private BigDecimal ultimoPreco;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "unidade_medida")
@@ -46,7 +48,7 @@ public class Item {
 
     @PositiveOrZero (message = "Quantidade deve ser maior que zero")
     @Column(name = "quantidade")
-    private Double quantidade;
+    private BigDecimal quantidade;
 
     @Column(name = "ativo")
     private Boolean ativo;
@@ -75,7 +77,7 @@ public class Item {
         return nome;
     }
 
-    public Double getPrecoMedio() {
+    public BigDecimal getPrecoMedio() {
         return precoMedio;
     }
 
@@ -83,7 +85,7 @@ public class Item {
         return subCategoria;
     }
 
-    public Double getUltimoPreco() {
+    public BigDecimal getUltimoPreco() {
         return ultimoPreco;
     }
 
@@ -91,11 +93,11 @@ public class Item {
         return unidadeMedida;
     }
 
-    public Double getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Double quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 
@@ -111,7 +113,7 @@ public class Item {
         this.nome = nome;
     }
 
-    public void setPrecoMedio(Double precoMedio) {
+    public void setPrecoMedio(BigDecimal precoMedio) {
         this.precoMedio = precoMedio;
     }
 
@@ -119,7 +121,7 @@ public class Item {
         this.subCategoria = subCategoria;
     }
 
-    public void setUltimoPreco(Double ultimoPreco) {
+    public void setUltimoPreco(BigDecimal ultimoPreco) {
         this.ultimoPreco = ultimoPreco;
     }
 

@@ -33,4 +33,9 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
         return ResponseEntity.status(400).body(erros);
     }
+
+    @ExceptionHandler(EstoqueNegativoException.class)
+    public ResponseEntity<String> handleEstoqueNegativo(EstoqueNegativoException ex){
+        return ResponseEntity.status(409).body(ex.getMessage());
+    }
 }
