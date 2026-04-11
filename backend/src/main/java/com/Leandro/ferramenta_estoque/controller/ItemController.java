@@ -45,7 +45,7 @@ public class ItemController {
         return ResponseEntity.ok(itemBuscado);
     }
     
-    @GetMapping("buscar/{nome}")
+    @GetMapping("/buscar/{nome}")
     public ResponseEntity<Item> buscarPorNome(@PathVariable String nome){
         Item itemBuscado = itemService.buscarPorNome(nome);
         return ResponseEntity.ok(itemBuscado);
