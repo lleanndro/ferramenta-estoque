@@ -38,4 +38,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleEstoqueNegativo(EstoqueNegativoException ex){
         return ResponseEntity.status(409).body(ex.getMessage());
     }
+    @ExceptionHandler(PrecoObrigatorioException.class)
+    public ResponseEntity<String> handlePrecoObrigatorioException (PrecoObrigatorioException ex){
+        return ResponseEntity.status(400).body(ex.getMessage());
+    }
 }

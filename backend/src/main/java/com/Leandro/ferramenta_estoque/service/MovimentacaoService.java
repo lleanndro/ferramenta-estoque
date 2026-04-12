@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.Leandro.ferramenta_estoque.dto.MovimentacaoRequestDTO;
 import com.Leandro.ferramenta_estoque.dto.MovimentacaoResponseDTO;
+import com.Leandro.ferramenta_estoque.exception.PrecoObrigatorioException;
 import com.Leandro.ferramenta_estoque.model.Item;
 import com.Leandro.ferramenta_estoque.model.Movimentacao;
 import com.Leandro.ferramenta_estoque.model.TipoMovimentacao;
@@ -27,8 +28,11 @@ public class MovimentacaoService {
 
     @Transactional
     public MovimentacaoResponseDTO registrarMovimentacao(MovimentacaoRequestDTO dto) {
-        Item item = itemService.buscarPorId(dto.getItemId());
+        Item item = itemService.buscarEntidadePorId(dto.getItemId());
         if (dto.getTipoMovimentacao() == TipoMovimentacao.ENTRADA) {
+            if(dto.getPrecoTotal() == null){
+                throw new PrecoObrigatorioException();
+            }
             itemService.atualizarAposEntrada(dto.getPrecoTotal(), dto.getQuantidade(), item);
         } else if (dto.getTipoMovimentacao() == TipoMovimentacao.SAIDA) {
             itemService.atualizarAposSaida(dto.getQuantidade(), item);
@@ -44,7 +48,7 @@ public class MovimentacaoService {
     }
 
     public List<MovimentacaoResponseDTO> listarMovimentacoesPorItem(String nomeItem) {
-        Item item = itemService.buscarPorNome(nomeItem);
+        Item item = itemService.buscarEntidadePorNome(nomeItem);
         return repository.findByItem(item)
                 .stream()
                 .map(mov -> new MovimentacaoResponseDTO(

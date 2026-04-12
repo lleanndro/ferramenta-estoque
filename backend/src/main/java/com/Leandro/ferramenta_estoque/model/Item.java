@@ -2,7 +2,6 @@ package com.Leandro.ferramenta_estoque.model;
 
 import java.math.BigDecimal;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -39,19 +38,26 @@ public class Item {
     @NotNull(message = "Unidade de medida é obrigatória")
     private UnidadeMedida unidadeMedida;
 
-    @NotBlank (message = "Categoria é obrigatória")
+    @NotBlank(message = "Categoria é obrigatória")
     @Column(name = "categoria")
     private String categoria;
 
     @Column(name = "sub_categoria")
     private String subCategoria;
 
-    @PositiveOrZero (message = "Quantidade deve ser maior que zero")
+    @PositiveOrZero(message = "Quantidade deve ser maior que zero")
     @Column(name = "quantidade")
     private BigDecimal quantidade;
 
     @Column(name = "ativo")
     private Boolean ativo;
+
+    public Item(String nome, UnidadeMedida unidadeMedida, String categoria, String subCategoria) {
+        this.nome = nome;
+        this.unidadeMedida = unidadeMedida;
+        this.categoria = categoria;
+        this.subCategoria = subCategoria;
+    }
 
     public Boolean getAtivo() {
         return ativo;

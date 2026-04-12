@@ -19,7 +19,6 @@ public class MovimentacaoRequestDTO {
     @Positive (message = "A quantidade movimentada precisa ser um número maior que zero.")
     private BigDecimal quantidade;
 
-    @NotNull (message = "A preço da movimentação precisa ser informado.")
     @PositiveOrZero (message = "O preço da movimentação não pode ser um número negativo.")
     private BigDecimal precoTotal;
 

@@ -12,7 +12,8 @@ import com.Leandro.ferramenta_estoque.service.ItemService;
 
 import jakarta.validation.Valid;
 
-import com.Leandro.ferramenta_estoque.model.Item;
+import com.Leandro.ferramenta_estoque.dto.ItemRequestDTO;
+import com.Leandro.ferramenta_estoque.dto.ItemResponseDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
@@ -28,32 +29,32 @@ public class ItemController {
     }
 
     @GetMapping // /itens já está implicito. 
-    public ResponseEntity<List<Item>> listarTodosItens(){
-       List<Item> listaDeItens = itemService.listarTodosOsItens();
+    public ResponseEntity<List<ItemResponseDTO>> listarTodosItens(){
+       List<ItemResponseDTO> listaDeItens = itemService.listarTodosOsItens();
        return ResponseEntity.ok(listaDeItens);
     }
 
     @GetMapping ("/ativo")
-    public ResponseEntity<List<Item>> listarItensNoEstoque(){
-        List<Item> listaDeItensEstoque = itemService.listarItensEstoque();
+    public ResponseEntity<List<ItemResponseDTO>> listarItensNoEstoque(){
+        List<ItemResponseDTO> listaDeItensEstoque = itemService.listarItensEstoque();
         return ResponseEntity.ok(listaDeItensEstoque);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Item> buscarPorId( @PathVariable Long id){
-        Item itemBuscado = itemService.buscarPorId(id);
+    public ResponseEntity<ItemResponseDTO> buscarPorId( @PathVariable Long id){
+        ItemResponseDTO itemBuscado = itemService.buscarPorId(id);
         return ResponseEntity.ok(itemBuscado);
     }
     
     @GetMapping("/buscar/{nome}")
-    public ResponseEntity<Item> buscarPorNome(@PathVariable String nome){
-        Item itemBuscado = itemService.buscarPorNome(nome);
+    public ResponseEntity<ItemResponseDTO> buscarPorNome(@PathVariable String nome){
+        ItemResponseDTO itemBuscado = itemService.buscarPorNome(nome);
         return ResponseEntity.ok(itemBuscado);
     }
 
     @PostMapping
-    public ResponseEntity<Item> cadastrarItem(@Valid @RequestBody Item item){
-        Item itemCadastrado = itemService.cadastrarItem(item);
+    public ResponseEntity<ItemResponseDTO> cadastrarItem(@Valid @RequestBody ItemRequestDTO requestDTO){
+        ItemResponseDTO itemCadastrado = itemService.cadastrarItem(requestDTO);
         return ResponseEntity.status(201).body(itemCadastrado);
     }
 

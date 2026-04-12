@@ -3,11 +3,14 @@ package com.Leandro.ferramenta_estoque.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.Leandro.ferramenta_estoque.model.Item;
 import com.Leandro.ferramenta_estoque.repository.ItemRepository;
+import com.Leandro.ferramenta_estoque.dto.ItemRequestDTO;
+import com.Leandro.ferramenta_estoque.dto.ItemResponseDTO;
 import com.Leandro.ferramenta_estoque.exception.DuplicidadeNomeException;
 import com.Leandro.ferramenta_estoque.exception.EstoqueNegativoException;
 import com.Leandro.ferramenta_estoque.exception.IdNaoEncontradoException;
@@ -21,32 +24,91 @@ public class ItemService {
         this.repository = repository;
     }
 
-    public Item cadastrarItem(Item item) {
-        boolean nomeDuplicidade = repository.findByNome(item.getNome()).isPresent();
+    public ItemResponseDTO cadastrarItem(ItemRequestDTO dto) {
+        boolean nomeDuplicidade = repository.findByNome(dto.getNome()).isPresent();
         if (nomeDuplicidade) {
-            throw new DuplicidadeNomeException(item.getNome());
+            throw new DuplicidadeNomeException(dto.getNome());
         }
 
-        item.setQuantidade(BigDecimal.ZERO);
+        Item item = new Item(dto.getNome(), dto.getUnidadeMedida(), dto.getCategoria(), dto.getSubCategoria());
         item.setAtivo(false);
+        item.setQuantidade(BigDecimal.ZERO);
 
-        return repository.save(item);
+        Item itemSalvo = repository.save(item);
+
+        return new ItemResponseDTO(itemSalvo.getId(),
+                itemSalvo.getNome(),
+                itemSalvo.getCategoria(),
+                itemSalvo.getSubCategoria(),
+                itemSalvo.getUnidadeMedida(),
+                itemSalvo.getQuantidade(),
+                itemSalvo.getPrecoMedio(),
+                itemSalvo.getUltimoPreco(),
+                itemSalvo.getAtivo());
     }
 
-    public List<Item> listarTodosOsItens() {
-        return repository.findAll();
+    public List<ItemResponseDTO> listarTodosOsItens() {
+        List<Item> listaItem = repository.findAll();
+        return listaItem.stream()
+                .map(item -> new ItemResponseDTO(item.getId(),
+                        item.getNome(),
+                        item.getCategoria(),
+                        item.getSubCategoria(),
+                        item.getUnidadeMedida(),
+                        item.getQuantidade(),
+                        item.getPrecoMedio(),
+                        item.getUltimoPreco(),
+                        item.getAtivo()))
+                .collect(Collectors.toList());
     }
 
-    public List<Item> listarItensEstoque() {
-        return repository.findByAtivoTrue();
+    public List<ItemResponseDTO> listarItensEstoque() {
+        List<Item> listaItem = repository.findByAtivoTrue();
+        return listaItem.stream()
+                .map(item -> new ItemResponseDTO(item.getId(),
+                        item.getNome(),
+                        item.getCategoria(),
+                        item.getSubCategoria(),
+                        item.getUnidadeMedida(),
+                        item.getQuantidade(),
+                        item.getPrecoMedio(),
+                        item.getUltimoPreco(),
+                        item.getAtivo()))
+                .collect(Collectors.toList());
     }
 
-    public Item buscarPorId(Long id) {
+    public ItemResponseDTO buscarPorId(Long id) {
+        Item item = repository.findById(id).orElseThrow(() -> new IdNaoEncontradoException(id));
+        return new ItemResponseDTO(item.getId(),
+                item.getNome(),
+                item.getCategoria(),
+                item.getSubCategoria(),
+                item.getUnidadeMedida(),
+                item.getQuantidade(),
+                item.getPrecoMedio(),
+                item.getUltimoPreco(),
+                item.getAtivo());
+    }
+
+    public Item buscarEntidadePorId(Long id) {
         return repository.findById(id).orElseThrow(() -> new IdNaoEncontradoException(id));
     }
 
-    public Item buscarPorNome(String nome) {
+    public Item buscarEntidadePorNome(String nome) {
         return repository.findByNome(nome).orElseThrow(() -> new NomeNaoEncontradoException(nome));
+    }
+
+    public ItemResponseDTO buscarPorNome(String nome) {
+        Item item = buscarEntidadePorNome(nome);
+        return new ItemResponseDTO(item.getId(),
+                item.getNome(),
+                item.getCategoria(),
+                item.getSubCategoria(),
+                item.getUnidadeMedida(),
+                item.getQuantidade(),
+                item.getPrecoMedio(),
+                item.getUltimoPreco(),
+                item.getAtivo());
     }
 
     public void deletarItem(Long id) {
@@ -58,10 +120,10 @@ public class ItemService {
 
     public Item atualizarAposEntrada(BigDecimal precoTotal, BigDecimal quantidadeAdicionada, Item item) {
         BigDecimal novaQuantidade = item.getQuantidade().add(quantidadeAdicionada);
-        BigDecimal ultimoPreco = precoTotal.divide(quantidadeAdicionada,2,RoundingMode.HALF_UP);
-        BigDecimal precoMedioAtual = item.getPrecoMedio() != null ? item.getPrecoMedio(): BigDecimal.ZERO;
+        BigDecimal ultimoPreco = precoTotal.divide(quantidadeAdicionada, 2, RoundingMode.HALF_UP);
+        BigDecimal precoMedioAtual = item.getPrecoMedio() != null ? item.getPrecoMedio() : BigDecimal.ZERO;
         BigDecimal somaDosPrecos = precoMedioAtual.multiply(item.getQuantidade()).add(precoTotal);
-        BigDecimal novoPrecoMedio = somaDosPrecos.divide(novaQuantidade,2,RoundingMode.HALF_UP);
+        BigDecimal novoPrecoMedio = somaDosPrecos.divide(novaQuantidade, 2, RoundingMode.HALF_UP);
 
         if (!item.getAtivo()) {
             item.setAtivo(true);
