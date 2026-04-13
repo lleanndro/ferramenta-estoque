@@ -47,26 +47,16 @@ public class Movimentacao {
     @Column(name = "data_movimentacao")
     private LocalDateTime data;
 
-    public Movimentacao(Long id, Item item, TipoMovimentacao tipoMovimentacao, BigDecimal quantidade,
-            BigDecimal precoTotal, LocalDateTime data) {
-                this.id = id;
-                this.item = item;
-                this.tipoMovimentacao = tipoMovimentacao;
-                this.quantidade = quantidade;
-                this.precoTotal = precoTotal;
-                this.data = data;
-    }
     public Movimentacao(Item item, TipoMovimentacao tipoMovimentacao, BigDecimal quantidade,
             BigDecimal precoTotal, LocalDateTime data) {
-                this.item = item;
-                this.tipoMovimentacao = tipoMovimentacao;
-                this.quantidade = quantidade;
-                this.precoTotal = precoTotal;
-                this.data = data;
+        this.item = item;
+        this.tipoMovimentacao = tipoMovimentacao;
+        this.quantidade = quantidade;
+        this.precoTotal = precoTotal;
+        this.data = data;
     }
 
-
-    public Movimentacao(){
+    public Movimentacao() {
 
     }
 
