@@ -74,5 +74,7 @@ public class MovimentacaoResponseDTO {
     public TipoMovimentacao getTipoMovimentacao() {
         return tipoMovimentacao;
     }
-
+    public Long getId() {
+        return idMovimentacao;
+    }
 }

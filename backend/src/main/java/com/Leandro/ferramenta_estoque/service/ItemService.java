@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.Leandro.ferramenta_estoque.model.Item;
 import com.Leandro.ferramenta_estoque.repository.ItemRepository;
+
+import jakarta.transaction.Transactional;
+
 import com.Leandro.ferramenta_estoque.dto.ItemRequestDTO;
 import com.Leandro.ferramenta_estoque.dto.ItemResponseDTO;
 import com.Leandro.ferramenta_estoque.exception.DuplicidadeNomeException;
@@ -36,89 +39,52 @@ public class ItemService {
 
         Item itemSalvo = repository.save(item);
 
-        return new ItemResponseDTO(itemSalvo.getId(),
-                itemSalvo.getNome(),
-                itemSalvo.getCategoria(),
-                itemSalvo.getSubCategoria(),
-                itemSalvo.getUnidadeMedida(),
-                itemSalvo.getQuantidade(),
-                itemSalvo.getPrecoMedio(),
-                itemSalvo.getUltimoPreco(),
-                itemSalvo.getAtivo());
+        return toDTO(itemSalvo);
     }
 
     public List<ItemResponseDTO> listarTodosOsItens() {
         List<Item> listaItem = repository.findAll();
         return listaItem.stream()
-                .map(item -> new ItemResponseDTO(item.getId(),
-                        item.getNome(),
-                        item.getCategoria(),
-                        item.getSubCategoria(),
-                        item.getUnidadeMedida(),
-                        item.getQuantidade(),
-                        item.getPrecoMedio(),
-                        item.getUltimoPreco(),
-                        item.getAtivo()))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
     public List<ItemResponseDTO> listarItensEstoque() {
         List<Item> listaItem = repository.findByAtivoTrue();
         return listaItem.stream()
-                .map(item -> new ItemResponseDTO(item.getId(),
-                        item.getNome(),
-                        item.getCategoria(),
-                        item.getSubCategoria(),
-                        item.getUnidadeMedida(),
-                        item.getQuantidade(),
-                        item.getPrecoMedio(),
-                        item.getUltimoPreco(),
-                        item.getAtivo()))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
     public ItemResponseDTO buscarPorId(Long id) {
-        Item item = repository.findById(id).orElseThrow(() -> new IdNaoEncontradoException(id));
-        return new ItemResponseDTO(item.getId(),
-                item.getNome(),
-                item.getCategoria(),
-                item.getSubCategoria(),
-                item.getUnidadeMedida(),
-                item.getQuantidade(),
-                item.getPrecoMedio(),
-                item.getUltimoPreco(),
-                item.getAtivo());
+        Item item = repository.findById(id)
+                .orElseThrow(() -> new IdNaoEncontradoException(id));
+        return toDTO(item);
     }
 
     public Item buscarEntidadePorId(Long id) {
-        return repository.findById(id).orElseThrow(() -> new IdNaoEncontradoException(id));
+        return repository.findById(id)
+                .orElseThrow(() -> new IdNaoEncontradoException(id));
     }
 
     public Item buscarEntidadePorNome(String nome) {
-        return repository.findByNome(nome).orElseThrow(() -> new NomeNaoEncontradoException(nome));
+        return repository.findByNome(nome)
+                .orElseThrow(() -> new NomeNaoEncontradoException(nome));
     }
 
     public ItemResponseDTO buscarPorNome(String nome) {
         Item item = buscarEntidadePorNome(nome);
-        return new ItemResponseDTO(item.getId(),
-                item.getNome(),
-                item.getCategoria(),
-                item.getSubCategoria(),
-                item.getUnidadeMedida(),
-                item.getQuantidade(),
-                item.getPrecoMedio(),
-                item.getUltimoPreco(),
-                item.getAtivo());
+        return toDTO(item);
     }
-
+    @Transactional
     public void deletarItem(Long id) {
-        if (!repository.findById(id).isPresent()) {
-            throw new IdNaoEncontradoException(id);
-        }
-        repository.deleteById(id);
+        Item item = buscarEntidadePorId(id);
+        repository.delete(item);
     }
 
     public Item atualizarAposEntrada(BigDecimal precoTotal, BigDecimal quantidadeAdicionada, Item item) {
+        validarQuantidadeParaDivisao(quantidadeAdicionada);
+
         BigDecimal novaQuantidade = item.getQuantidade().add(quantidadeAdicionada);
         BigDecimal ultimoPreco = precoTotal.divide(quantidadeAdicionada, 2, RoundingMode.HALF_UP);
         BigDecimal precoMedioAtual = item.getPrecoMedio() != null ? item.getPrecoMedio() : BigDecimal.ZERO;
@@ -128,22 +94,39 @@ public class ItemService {
         if (!item.getAtivo()) {
             item.setAtivo(true);
         }
+
         item.setUltimoPreco(ultimoPreco);
         item.setQuantidade(novaQuantidade);
         item.setPrecoMedio(novoPrecoMedio);
+
         return repository.save(item);
     }
 
     public Item atualizarAposSaida(BigDecimal quantidadeRetirada, Item item) {
         BigDecimal novaQuantidade = item.getQuantidade().subtract(quantidadeRetirada);
+
         if (novaQuantidade.compareTo(BigDecimal.ZERO) < 0) {
             throw new EstoqueNegativoException(quantidadeRetirada);
         }
+
         if (novaQuantidade.compareTo(BigDecimal.ZERO) == 0) {
             item.setAtivo(false);
         }
+
         item.setQuantidade(novaQuantidade);
+
         return repository.save(item);
     }
 
+    private void validarQuantidadeParaDivisao(BigDecimal quantidade) {
+        if (quantidade.compareTo(BigDecimal.ZERO) == 0) {
+            throw new IllegalArgumentException("Quantidade inválida");
+        }
+    }
+    
+    private ItemResponseDTO toDTO(Item item) {
+        return new ItemResponseDTO(item.getId(), item.getNome(), item.getCategoria(), item.getSubCategoria(),
+                item.getUnidadeMedida(), item.getUltimoPreco(), item.getQuantidade(), item.getPrecoMedio(),
+                item.getAtivo());
+    }
 }

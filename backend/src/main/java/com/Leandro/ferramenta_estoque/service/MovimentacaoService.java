@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.Leandro.ferramenta_estoque.dto.CadastroECompraRequestDTO;
+import com.Leandro.ferramenta_estoque.dto.CadastroECompraResponseDTO;
+import com.Leandro.ferramenta_estoque.dto.ItemRequestDTO;
+import com.Leandro.ferramenta_estoque.dto.ItemResponseDTO;
 import com.Leandro.ferramenta_estoque.dto.MovimentacaoRequestDTO;
 import com.Leandro.ferramenta_estoque.dto.MovimentacaoResponseDTO;
 import com.Leandro.ferramenta_estoque.exception.PrecoObrigatorioException;
@@ -18,6 +22,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class MovimentacaoService {
+
     private final MovimentacaoRepository repository;
     private final ItemService itemService;
 
@@ -28,53 +33,81 @@ public class MovimentacaoService {
 
     @Transactional
     public MovimentacaoResponseDTO registrarMovimentacao(MovimentacaoRequestDTO dto) {
+
         Item item = itemService.buscarEntidadePorId(dto.getItemId());
+
         if (dto.getTipoMovimentacao() == TipoMovimentacao.ENTRADA) {
-            if(dto.getPrecoTotal() == null){
+            if (dto.getPrecoTotal() == null) {
                 throw new PrecoObrigatorioException();
             }
             itemService.atualizarAposEntrada(dto.getPrecoTotal(), dto.getQuantidade(), item);
+
         } else if (dto.getTipoMovimentacao() == TipoMovimentacao.SAIDA) {
             itemService.atualizarAposSaida(dto.getQuantidade(), item);
         }
-        Movimentacao movimentacao = new Movimentacao(item, dto.getTipoMovimentacao(), dto.getQuantidade(),
-                dto.getPrecoTotal(), LocalDateTime.now());
+
+        Movimentacao movimentacao = new Movimentacao(
+                item,
+                dto.getTipoMovimentacao(),
+                dto.getQuantidade(),
+                dto.getPrecoTotal(),
+                LocalDateTime.now());
 
         Movimentacao movimentacaoSalva = repository.save(movimentacao);
-        
-        return new MovimentacaoResponseDTO(movimentacaoSalva.getData(), movimentacaoSalva.getId(),
-                movimentacaoSalva.getItem().getNome(), movimentacaoSalva.getPrecoTotal(),
-                movimentacaoSalva.getQuantidade(), dto.getTipoMovimentacao());
+
+        return toDTO(movimentacaoSalva);
     }
 
     public List<MovimentacaoResponseDTO> listarMovimentacoesPorItem(String nomeItem) {
         Item item = itemService.buscarEntidadePorNome(nomeItem);
+
         return repository.findByItem(item)
                 .stream()
-                .map(mov -> new MovimentacaoResponseDTO(
-                        mov.getData(),
-                        mov.getId(),
-                        item.getNome(),
-                        mov.getPrecoTotal(),
-                        mov.getQuantidade(),
-                        mov.getTipoMovimentacao()))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 
     public List<MovimentacaoResponseDTO> listarMovimentacaoPorTipo(TipoMovimentacao tipoMovimentacao) {
+
         return repository.findByTipoMovimentacao(tipoMovimentacao)
                 .stream()
-                .map(mov -> new MovimentacaoResponseDTO(
-                        mov.getData(),
-                        mov.getId(),
-                        mov.getItem().getNome(),
-                        mov.getPrecoTotal(),
-                        mov.getQuantidade(), 
-                        mov.getTipoMovimentacao()))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
-        /// tem algum filtro de data nesse método? se não tiver como eu implemento? qual
-        /// o papel de findByDataBeetwen
-        /// nesse tipo de operação?
     }
 
+    @Transactional
+    public CadastroECompraResponseDTO cadastroECompra(CadastroECompraRequestDTO cadastroECompraRequestDTO) {
+
+        ItemRequestDTO itemRequestDTO = new ItemRequestDTO(cadastroECompraRequestDTO.getNome(),
+                cadastroECompraRequestDTO.getCategoria(),
+                cadastroECompraRequestDTO.getSubCategoria(),
+                cadastroECompraRequestDTO.getUnidadeMedida());
+
+        ItemResponseDTO itemSalvo = itemService.cadastrarItem(itemRequestDTO);
+
+        MovimentacaoRequestDTO movimentacaoRequestDTO = new MovimentacaoRequestDTO(itemSalvo.getId(),
+                TipoMovimentacao.ENTRADA,
+                cadastroECompraRequestDTO.getQuantidade(),
+                cadastroECompraRequestDTO.getPrecoTotal());
+
+        MovimentacaoResponseDTO movimentacaoResponseDTO = registrarMovimentacao(movimentacaoRequestDTO);
+        ItemResponseDTO itemAtualizado = itemService.buscarPorId(itemSalvo.getId());
+
+        return new CadastroECompraResponseDTO(itemAtualizado.getId(), itemAtualizado.getNome(), itemAtualizado.getCategoria(),
+                itemAtualizado.getSubCategoria(),
+                itemAtualizado.getUnidadeMedida(),
+                itemAtualizado.getAtivo(),
+                itemAtualizado.getQuantidade(),
+                itemAtualizado.getPrecoMedio(),
+                itemAtualizado.getUltimoPreco(),
+                movimentacaoResponseDTO.getTipoMovimentacao(),
+                movimentacaoResponseDTO.getId(),
+                movimentacaoResponseDTO.getData());
+    }
+
+    private MovimentacaoResponseDTO toDTO(Movimentacao mov) {
+        return new MovimentacaoResponseDTO(mov.getData(), mov.getId(), mov.getItem().getNome(), mov.getPrecoTotal(),
+                mov.getQuantidade(),
+                mov.getTipoMovimentacao());
+    }
 }

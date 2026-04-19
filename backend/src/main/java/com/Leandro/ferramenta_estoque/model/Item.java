@@ -1,7 +1,10 @@
 package com.Leandro.ferramenta_estoque.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,6 +12,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -22,7 +26,8 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Nome é obrigatório")
+    @NotBlank(message = "Nome não pode ser vazio")
+    @NotNull(message = "Nome é obrigatório")
     @Column(name = "nome", nullable = false)
     private String nome;
 
@@ -38,7 +43,8 @@ public class Item {
     @NotNull(message = "Unidade de medida é obrigatória")
     private UnidadeMedida unidadeMedida;
 
-    @NotBlank(message = "Categoria é obrigatória")
+    @NotBlank(message = "Categoria não pode ser vazia")
+    @NotNull(message = "Categoria é obrigatória")
     @Column(name = "categoria")
     private String categoria;
 
@@ -51,6 +57,9 @@ public class Item {
 
     @Column(name = "ativo")
     private Boolean ativo;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Movimentacao> movimentacoes;
 
     public Item(String nome, UnidadeMedida unidadeMedida, String categoria, String subCategoria) {
         this.nome = nome;
@@ -134,5 +143,4 @@ public class Item {
     public void setUnidadeMedida(UnidadeMedida unidadeMedida) {
         this.unidadeMedida = unidadeMedida;
     }
-
 }

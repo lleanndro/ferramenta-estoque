@@ -3,6 +3,7 @@ package com.Leandro.ferramenta_estoque.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +33,7 @@ public class MovimentacaoController {
         return ResponseEntity.status(201).body(movimentacaoResponseDTO);
     }
 
+    @Validated
     @GetMapping ("/buscar/{nome}")
     public ResponseEntity<List<MovimentacaoResponseDTO>> listarMovimentacaoPorItem(@PathVariable String nome) {
         List<MovimentacaoResponseDTO> movimentacoesDoItem = movimentacaoService.listarMovimentacoesPorItem(nome);

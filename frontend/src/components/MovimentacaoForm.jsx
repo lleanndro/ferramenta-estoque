@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function MovimentacaoForm({ onCadastrar }) {
     const [form, setForm] = useState({
-        tipoMovimentacao: "",
+        tipoMovimentacao: "SAIDA",
         nomeItem: "",
         quantidade: "",
         precoTotal: ""
@@ -16,7 +16,7 @@ function MovimentacaoForm({ onCadastrar }) {
     function handleSubmit() {
         onCadastrar(form);
         setForm({
-            tipoMovimentacao: "",
+            tipoMovimentacao: "SAIDA",
             nomeItem: "",
             quantidade: "",
             precoTotal: ""
@@ -28,8 +28,8 @@ function MovimentacaoForm({ onCadastrar }) {
             <form>
                 <label htmlFor="tipoMovimentacao">Selecione o tipo da movimentação</label>
                 <select name="tipoMovimentacao" value={form.tipoMovimentacao} onChange={handleChange}>
-                    <option value="ENTRADA">ENTRADA</option>
                     <option value="SAIDA">SAIDA</option>
+                    <option value="ENTRADA">ENTRADA</option>  
                 </select>
 
                 <label htmlFor="nomeItem">Insira o nome do item:</label>

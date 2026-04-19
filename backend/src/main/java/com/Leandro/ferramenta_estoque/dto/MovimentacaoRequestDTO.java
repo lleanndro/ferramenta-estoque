@@ -4,28 +4,40 @@ import java.math.BigDecimal;
 
 import com.Leandro.ferramenta_estoque.model.TipoMovimentacao;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public class MovimentacaoRequestDTO {
-    @NotNull(message = "o id do Item é obrigatório")
+    @NotNull(message = "ID do item movimentado precisa ser informado")
     private Long itemId;
 
-    @NotNull (message = "O tipo da movimentação precisa ser informado.")
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "O tipo de movimentação precisa ser informado")
     private TipoMovimentacao tipoMovimentacao;
 
-    @NotNull (message = "A quantidade movimentada precisa ser informada.")
-    @Positive (message = "A quantidade movimentada precisa ser um número maior que zero.")
+    @Positive(message = "A quantidade de itens precisa ser maior que zero")
+    @NotNull(message = "Quantidade é obrigatória")
     private BigDecimal quantidade;
 
-    @PositiveOrZero (message = "O preço da movimentação não pode ser um número negativo.")
+    @PositiveOrZero(message = "O preço total precisa ser igual ou maior que zero")
+    @NotNull(message = "Preço total é obrigatório")
     private BigDecimal precoTotal;
 
     public MovimentacaoRequestDTO(){
         
     }
 
+    
+    public MovimentacaoRequestDTO(Long itemId, TipoMovimentacao tipoMovimentacao, BigDecimal quantidade,
+            BigDecimal precoTotal) {
+        this.itemId = itemId;
+        this.tipoMovimentacao = tipoMovimentacao;
+        this.quantidade = quantidade;
+        this.precoTotal = precoTotal;
+    }
     public Long getItemId() {
         return itemId;
     }

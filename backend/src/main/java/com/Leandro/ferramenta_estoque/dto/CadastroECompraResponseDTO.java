@@ -1,10 +1,12 @@
 package com.Leandro.ferramenta_estoque.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+import com.Leandro.ferramenta_estoque.model.TipoMovimentacao;
 import com.Leandro.ferramenta_estoque.model.UnidadeMedida;
 
-public class ItemResponseDTO {
+public class CadastroECompraResponseDTO {
     private Long id;
     private String nome;
     private String categoria;
@@ -14,9 +16,13 @@ public class ItemResponseDTO {
     private BigDecimal quantidade;
     private BigDecimal precoMedio;
     private BigDecimal ultimoPreco;
+    private TipoMovimentacao tipoMovimentacao;
+    private Long idMovimentacao;
+    private LocalDateTime data;
 
-    public ItemResponseDTO(Long id, String nome, String categoria, String subCategoria, UnidadeMedida unidadeMedida,
-            BigDecimal quantidade, BigDecimal precoMedio, BigDecimal ultimoPreco, boolean ativo) {
+    public CadastroECompraResponseDTO(Long id, String nome, String categoria, String subCategoria,
+            UnidadeMedida unidadeMedida, Boolean ativo, BigDecimal quantidade, BigDecimal precoMedio,
+            BigDecimal ultimoPreco, TipoMovimentacao tipoMovimentacao, Long idMovimentacao, LocalDateTime data) {
         this.id = id;
         this.nome = nome;
         this.categoria = categoria;
@@ -26,18 +32,23 @@ public class ItemResponseDTO {
         this.quantidade = quantidade;
         this.precoMedio = precoMedio;
         this.ultimoPreco = ultimoPreco;
+        this.tipoMovimentacao = tipoMovimentacao;
+        this.idMovimentacao = idMovimentacao;
+        this.data = data;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getNome() {
         return nome;
     }
 
-    public Long getId(){
-        return id;
-    }
-
-    public void setId(Long id){
-        this.id = id;
-    }
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -98,4 +109,27 @@ public class ItemResponseDTO {
         this.ultimoPreco = ultimoPreco;
     }
 
+    public TipoMovimentacao getTipoMovimentacao() {
+        return tipoMovimentacao;
+    }
+
+    public void setTipoMovimentacao(TipoMovimentacao tipoMovimentacao) {
+        this.tipoMovimentacao = tipoMovimentacao;
+    }
+
+    public Long getIdMovimentacao() {
+        return idMovimentacao;
+    }
+
+    public void setIdMovimentacao(Long idMovimentacao) {
+        this.idMovimentacao = idMovimentacao;
+    }
+
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    public void setData(LocalDateTime data) {
+        this.data = data;
+    }
 }

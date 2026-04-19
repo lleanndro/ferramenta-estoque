@@ -28,7 +28,7 @@ public class Movimentacao {
 
     @ManyToOne
     @JoinColumn(name = "id_item")
-    @NotNull(message = "Qual item foi movimentado precisa ser informado")
+    @NotNull(message = "ID do item movimentado precisa ser informado")
     private Item item;
 
     @Enumerated(EnumType.STRING)

@@ -12,7 +12,9 @@ import java.util.List;
 public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long> {
     List<Movimentacao> findByTipoMovimentacao(TipoMovimentacao tipoMovimentacao);
     List<Movimentacao> findByItem(Item item);
-    List<Movimentacao> findByItemOrderByDataDesc(Item item);
     List<Movimentacao> findByItemAndTipoMovimentacao(Item item, TipoMovimentacao tipo);
     List<Movimentacao> findByDataBetween(LocalDateTime inicio, LocalDateTime fim);
+    List<Movimentacao> findByItemAndDataBetween(Item item, LocalDateTime inicio, LocalDateTime fim); 
+    List<Movimentacao> findByItemAndDataGreaterThanEqual(Item item, LocalDateTime inicio);
+    List<Movimentacao> findByItemAndDataLessThanEqual(Item item, LocalDateTime fim);
 }
