@@ -6,6 +6,10 @@ export async function listarTodosOsItens() {
     return response.json();
 }
 
+export async function listarItensNoEstoque() {
+    const response = await fetch(`${BASE_URL}/ativo`);
+    return response.json();
+}
 export async function cadastrarItem(item) {
     const response = await fetch(BASE_URL, {
         method: "POST",

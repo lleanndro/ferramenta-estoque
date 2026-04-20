@@ -1,4 +1,4 @@
-function ItemTabela({ itens, onDeletar }) {
+function EstoqueTabela({ itens, onDeletar }) {
     return (
         <table>
             <thead>
@@ -7,6 +7,9 @@ function ItemTabela({ itens, onDeletar }) {
                     <th>Categoria</th>
                     <th>Subcategoria</th>
                     <th>Unidade</th>
+                    <th>Quantidade</th>
+                    <th>Preço médio(unitário)</th>
+                    <th>Ultimo preço de compra (unitário)</th>
                 </tr>
             </thead>
             <tbody>
@@ -16,6 +19,9 @@ function ItemTabela({ itens, onDeletar }) {
                         <td>{item.categoria}</td>
                         <td>{item.subCategoria}</td>
                         <td>{item.unidadeMedida}</td>
+                        <td>{item.quantidade}</td>
+                        <td>{item.precoMedio}</td>
+                        <td>{item.ultimoPreco}</td>
                         <td>
                             <button onClick={() => onDeletar(item.id)}>Excluir Item</button>
                         </td>
@@ -25,4 +31,4 @@ function ItemTabela({ itens, onDeletar }) {
         </table>
     );
 }
-export default ItemTabela;
+export default EstoqueTabela;

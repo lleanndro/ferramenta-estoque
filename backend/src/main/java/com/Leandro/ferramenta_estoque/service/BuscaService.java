@@ -13,7 +13,6 @@ import com.Leandro.ferramenta_estoque.dto.ItemResponseDTO;
 import com.Leandro.ferramenta_estoque.filter.ItemPredicates;
 import com.Leandro.ferramenta_estoque.model.Item;
 import com.Leandro.ferramenta_estoque.repository.ItemRepository;
-import com.Leandro.ferramenta_estoque.repository.MovimentacaoRepository;
 
 import java.util.Comparator;
 
@@ -28,7 +27,7 @@ public class BuscaService {
     }
 
     public List<ItemResponseDTO> buscarComFiltros(FiltroItemRequestDTO filtros) {
-        List<Item> itens = itemRepository.findAll();
+        List<Item> itens = itemRepository.findByAtivoTrue();
 
         Stream<Item> stream = aplicarFiltros(itens.stream(), filtros);
 
@@ -42,11 +41,14 @@ public class BuscaService {
     private Stream<Item> aplicarFiltros(Stream<Item> stream, FiltroItemRequestDTO filtros) {
         List<Predicate<Item>> predicados = new ArrayList<>();
 
+        itemPredicates.obterFiltroNome(filtros.getNome())
+            .ifPresent(predicados::add);
+        
         itemPredicates.obterFiltroCategoria(filtros.getCategorias())
-                .ifPresent(predicados::add);
-
+            .ifPresent(predicados::add);
+        
         itemPredicates.obterFiltroSubCategoria(filtros.getSubCategorias())
-                .ifPresent(predicados::add);
+            .ifPresent(predicados::add);
 
         itemPredicates.obterFiltroUnidadeMedida(filtros.getUnidadeMedida())
                 .ifPresent(predicados::add);

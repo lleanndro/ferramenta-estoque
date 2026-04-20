@@ -4,12 +4,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.Leandro.ferramenta_estoque.model.TipoMovimentacao;
+import com.Leandro.ferramenta_estoque.model.UnidadeMedida;;
 
 public class FiltroItemRequestDTO {
 
+    private String nome;
     private List<String> categorias;
     private List<String> subCategorias;
-    private String unidadeMedida;
+    private UnidadeMedida unidadeMedida;
     private String ordenarPor;
     private String direcao;
     private LocalDateTime dataInicio;
@@ -19,9 +21,10 @@ public class FiltroItemRequestDTO {
     public FiltroItemRequestDTO() {
     }
 
-    public FiltroItemRequestDTO(List<String> categorias, List<String> subCategorias, String unidadeMedida,
+    public FiltroItemRequestDTO(String nome, List<String> categorias, List<String> subCategorias, UnidadeMedida unidadeMedida,
             String ordenarPor, String direcao, LocalDateTime dataInicio, LocalDateTime dataFim,
             TipoMovimentacao tipoMovimentacao) {
+        this.nome = nome;
         this.categorias = categorias;
         this.subCategorias = subCategorias;
         this.unidadeMedida = unidadeMedida;
@@ -32,7 +35,14 @@ public class FiltroItemRequestDTO {
         this.tipoMovimentacao = tipoMovimentacao;
     }
 
-    // Getters e Setters
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public List<String> getCategorias() {
         return categorias;
     }
@@ -49,11 +59,11 @@ public class FiltroItemRequestDTO {
         this.subCategorias = subCategorias;
     }
 
-    public String getUnidadeMedida() {
+    public UnidadeMedida getUnidadeMedida() {
         return unidadeMedida;
     }
 
-    public void setUnidadeMedida(String unidadeMedida) {
+    public void setUnidadeMedida(UnidadeMedida unidadeMedida) {
         this.unidadeMedida = unidadeMedida;
     }
 

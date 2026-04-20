@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Leandro.ferramenta_estoque.dto.FiltroItemRequestDTO;
 import com.Leandro.ferramenta_estoque.dto.ItemResponseDTO;
 import com.Leandro.ferramenta_estoque.model.TipoMovimentacao;
+import com.Leandro.ferramenta_estoque.model.UnidadeMedida;
 import com.Leandro.ferramenta_estoque.service.BuscaService;
 
 @RestController
@@ -27,17 +28,27 @@ public class BuscaController {
 
     @GetMapping("/itens")
     public ResponseEntity<List<ItemResponseDTO>> buscarItens(
-            @RequestParam(required = false) List<String> categorias,
-            @RequestParam(required = false) List<String> subCategorias,
-            @RequestParam(required = false) String unidadeMedida,
-            @RequestParam(required = false) String ordenarPor,
-            @RequestParam(required = false, defaultValue = "ASC") String direcao,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim,
-            @RequestParam(required = false) TipoMovimentacao tipoMovimentacao) {
-
-        FiltroItemRequestDTO filtros = new FiltroItemRequestDTO(categorias, subCategorias, unidadeMedida, ordenarPor,
-                direcao, dataInicio, dataFim, tipoMovimentacao);
+        @RequestParam(required = false) String nome,                    // NOVO
+        @RequestParam(required = false) List<String> categorias,
+        @RequestParam(required = false) List<String> subCategorias,
+        @RequestParam(required = false) UnidadeMedida unidadeMedida,
+        @RequestParam(required = false) String ordenarPor,
+        @RequestParam(required = false, defaultValue = "ASC") String direcao,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim,
+        @RequestParam(required = false) TipoMovimentacao tipoMovimentacao
+    ) {
+        FiltroItemRequestDTO filtros = new FiltroItemRequestDTO(
+            nome,
+            categorias, 
+            subCategorias, 
+            unidadeMedida, 
+            ordenarPor, 
+            direcao, 
+            dataInicio, 
+            dataFim, 
+            tipoMovimentacao
+        );
 
         List<ItemResponseDTO> resultado = buscaService.buscarComFiltros(filtros);
         return ResponseEntity.ok(resultado);

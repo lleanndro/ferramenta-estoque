@@ -6,7 +6,7 @@ function ItemForm({ onCadastar }) {
         nome: "",
         categoria: "",
         subCategoria: "",
-        unidadeMedida: ""
+        unidadeMedida: "KG"
     });
     function handleChange(e) {
         setForm({
@@ -20,7 +20,7 @@ function ItemForm({ onCadastar }) {
             nome: "",
             categoria: "",
             subCategoria: "",
-            unidadeMedida: ""
+            unidadeMedida: "KG"
         })
     }
     return (

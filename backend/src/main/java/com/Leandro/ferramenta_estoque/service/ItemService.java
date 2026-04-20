@@ -49,6 +49,7 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+
     public List<ItemResponseDTO> listarItensEstoque() {
         List<Item> listaItem = repository.findByAtivoTrue();
         return listaItem.stream()
@@ -126,7 +127,7 @@ public class ItemService {
     
     private ItemResponseDTO toDTO(Item item) {
         return new ItemResponseDTO(item.getId(), item.getNome(), item.getCategoria(), item.getSubCategoria(),
-                item.getUnidadeMedida(), item.getUltimoPreco(), item.getQuantidade(), item.getPrecoMedio(),
+                item.getUnidadeMedida(), item.getQuantidade(), item.getPrecoMedio(),item.getUltimoPreco(),
                 item.getAtivo());
     }
 }

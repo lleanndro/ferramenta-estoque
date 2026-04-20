@@ -23,7 +23,6 @@ public class MovimentacaoRequestDTO {
     private BigDecimal quantidade;
 
     @PositiveOrZero(message = "O preço total precisa ser igual ou maior que zero")
-    @NotNull(message = "Preço total é obrigatório")
     private BigDecimal precoTotal;
 
     public MovimentacaoRequestDTO(){
