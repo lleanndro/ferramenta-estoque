@@ -28,6 +28,7 @@ public class BuscaController {
 
     @GetMapping("/itens")
     public ResponseEntity<List<ItemResponseDTO>> buscarItens(
+        @RequestParam(required = false) Boolean ativo,
         @RequestParam(required = false) String nome,                    // NOVO
         @RequestParam(required = false) List<String> categorias,
         @RequestParam(required = false) List<String> subCategorias,
@@ -39,6 +40,7 @@ public class BuscaController {
         @RequestParam(required = false) TipoMovimentacao tipoMovimentacao
     ) {
         FiltroItemRequestDTO filtros = new FiltroItemRequestDTO(
+            ativo,
             nome,
             categorias, 
             subCategorias, 

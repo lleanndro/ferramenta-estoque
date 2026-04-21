@@ -1,5 +1,6 @@
 package com.Leandro.ferramenta_estoque.filter;
 
+import java.lang.foreign.Linker.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,13 @@ public class ItemPredicates {
         this.movimentacaoRepository = movimentacaoRepository;
     }
 
+    public Optional<Predicate<Item>> obterFiltroAtivo(Boolean ativo){
+        if(ativo == null){
+            return Optional.empty();
+        }
+        return Optional.of(item -> item.getAtivo() == ativo);
+    }
+    
     public Optional<Predicate<Item>> obterFiltroNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
             return Optional.empty();

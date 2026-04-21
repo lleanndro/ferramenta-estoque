@@ -8,6 +8,7 @@ import com.Leandro.ferramenta_estoque.model.UnidadeMedida;;
 
 public class FiltroItemRequestDTO {
 
+    private Boolean ativo;
     private String nome;
     private List<String> categorias;
     private List<String> subCategorias;
@@ -21,10 +22,11 @@ public class FiltroItemRequestDTO {
     public FiltroItemRequestDTO() {
     }
 
-    public FiltroItemRequestDTO(String nome, List<String> categorias, List<String> subCategorias, UnidadeMedida unidadeMedida,
+    public FiltroItemRequestDTO(Boolean ativo, String nome, List<String> categorias, List<String> subCategorias, UnidadeMedida unidadeMedida,
             String ordenarPor, String direcao, LocalDateTime dataInicio, LocalDateTime dataFim,
             TipoMovimentacao tipoMovimentacao) {
         this.nome = nome;
+        this.ativo = ativo;
         this.categorias = categorias;
         this.subCategorias = subCategorias;
         this.unidadeMedida = unidadeMedida;
@@ -35,6 +37,12 @@ public class FiltroItemRequestDTO {
         this.tipoMovimentacao = tipoMovimentacao;
     }
 
+    public Boolean getAtivo() {
+        return ativo;
+    }
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
     public String getNome() {
         return nome;
     }

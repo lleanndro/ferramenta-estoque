@@ -1,4 +1,4 @@
-function EstoqueTabela({ itens, onDeletar }) {
+function EstoqueTabela({ itens}) {
     return (
         <table>
             <thead>
@@ -22,9 +22,6 @@ function EstoqueTabela({ itens, onDeletar }) {
                         <td>{item.quantidade}</td>
                         <td>{item.precoMedio}</td>
                         <td>{item.ultimoPreco}</td>
-                        <td>
-                            <button onClick={() => onDeletar(item.id)}>Excluir Item</button>
-                        </td>
                     </tr>
                 ))}
             </tbody>

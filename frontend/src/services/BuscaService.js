@@ -3,6 +3,10 @@ const BUSCA_BASE_URL = "http://localhost:8080/busca";
 export async function buscarItens(filtros) {
     const params = new URLSearchParams();
 
+    if(filtros.ativo !== null && filtros.ativo !== undefined){
+        params.append('ativo', filtros.ativo);
+    }
+    
     if (filtros.nome && filtros.nome.trim()) {
         params.append('nome', filtros.nome.trim());
     }

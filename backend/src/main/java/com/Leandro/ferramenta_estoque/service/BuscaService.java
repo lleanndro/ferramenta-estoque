@@ -27,7 +27,7 @@ public class BuscaService {
     }
 
     public List<ItemResponseDTO> buscarComFiltros(FiltroItemRequestDTO filtros) {
-        List<Item> itens = itemRepository.findByAtivoTrue();
+        List<Item> itens = itemRepository.findAll();
 
         Stream<Item> stream = aplicarFiltros(itens.stream(), filtros);
 
@@ -41,17 +41,15 @@ public class BuscaService {
     private Stream<Item> aplicarFiltros(Stream<Item> stream, FiltroItemRequestDTO filtros) {
         List<Predicate<Item>> predicados = new ArrayList<>();
 
-        itemPredicates.obterFiltroNome(filtros.getNome())
-            .ifPresent(predicados::add);
-        
-        itemPredicates.obterFiltroCategoria(filtros.getCategorias())
-            .ifPresent(predicados::add);
-        
-        itemPredicates.obterFiltroSubCategoria(filtros.getSubCategorias())
-            .ifPresent(predicados::add);
+        itemPredicates.obterFiltroAtivo(filtros.getAtivo()).ifPresent(predicados::add);
 
-        itemPredicates.obterFiltroUnidadeMedida(filtros.getUnidadeMedida())
-                .ifPresent(predicados::add);
+        itemPredicates.obterFiltroNome(filtros.getNome()).ifPresent(predicados::add);
+
+        itemPredicates.obterFiltroCategoria(filtros.getCategorias()).ifPresent(predicados::add);
+
+        itemPredicates.obterFiltroSubCategoria(filtros.getSubCategorias()).ifPresent(predicados::add);
+
+        itemPredicates.obterFiltroUnidadeMedida(filtros.getUnidadeMedida()).ifPresent(predicados::add);
 
         itemPredicates.obterFiltroMovimentacao(
                 filtros.getDataInicio(),
@@ -109,7 +107,7 @@ public class BuscaService {
 
     private ItemResponseDTO toDTO(Item item) {
         return new ItemResponseDTO(item.getId(), item.getNome(), item.getCategoria(), item.getSubCategoria(),
-                item.getUnidadeMedida(), item.getUltimoPreco(), item.getQuantidade(), item.getPrecoMedio(),
+                item.getUnidadeMedida(), item.getQuantidade(), item.getPrecoMedio(), item.getUltimoPreco(),
                 item.getAtivo());
     }
 }
