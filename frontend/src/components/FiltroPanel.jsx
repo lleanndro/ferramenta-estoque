@@ -59,28 +59,7 @@ function FiltroPanel({ onFiltrar, onLimpar }) {
 
             {mostrarFiltros && (
                 <div style={{ marginTop: "15px" }}>
-                    
-                    {/* SEARCH BAR - NOME */}
-                    <div style={{ marginBottom: "15px" }}>
-                        <label><strong>🔎 Buscar por nome:</strong></label>
-                        <input
-                            type="text"
-                            placeholder="Digite o nome do item (ex: parafuso, martelo...)"
-                            value={filtros.nome}
-                            onChange={(e) => handleChange("nome", e.target.value)}
-                            style={{ 
-                                width: "100%", 
-                                padding: "8px", 
-                                marginTop: "5px",
-                                border: "1px solid #ccc",
-                                borderRadius: "4px"
-                            }}
-                        />
-                        <small style={{ color: "#666" }}>
-                            Busca parcial, não precisa digitar o nome completo
-                        </small>
-                    </div>
-
+                
                     {/* SEARCH BAR - CATEGORIAS */}
                     <div style={{ marginBottom: "15px" }}>
                         <label><strong>📂 Filtrar por categorias:</strong></label>

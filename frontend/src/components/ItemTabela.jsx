@@ -1,4 +1,4 @@
-function ItemTabela({ itens, onDeletar }) {
+function ItemTabela({ itens, onDeletar, onMovimentar }) {  // NOVO: onMovimentar
     return (
         <table>
             <thead>
@@ -7,6 +7,7 @@ function ItemTabela({ itens, onDeletar }) {
                     <th>Categoria</th>
                     <th>Subcategoria</th>
                     <th>Unidade</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,7 +18,33 @@ function ItemTabela({ itens, onDeletar }) {
                         <td>{item.subCategoria}</td>
                         <td>{item.unidadeMedida}</td>
                         <td>
-                            <button onClick={() => onDeletar(item.id)}>Excluir Item</button>
+                            <button 
+                                onClick={() => onMovimentar(item)}
+                                style={{
+                                    marginRight: "5px",
+                                    padding: "5px 10px",
+                                    backgroundColor: "#2196F3",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "4px",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                📦 Movimentar
+                            </button>
+                            <button 
+                                onClick={() => onDeletar(item.id)}
+                                style={{
+                                    padding: "5px 10px",
+                                    backgroundColor: "#f44336",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "4px",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                🗑️ Excluir
+                            </button>
                         </td>
                     </tr>
                 ))}
@@ -25,4 +52,5 @@ function ItemTabela({ itens, onDeletar }) {
         </table>
     );
 }
+
 export default ItemTabela;

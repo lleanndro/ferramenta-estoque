@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import EstoqueTabela from "../components/EstoqueTabela";
 import FiltroPanel from "../components/FiltroPanel";
+import MovimentacaoModal from "../components/MovimentacaoModal";
 import { deletarItem } from "../services/itemService";
 import { buscarItens } from "../services/buscaService";
+import { registrarMovimentacao } from "../services/movimentacaoService";
 
 function EstoquePage() {
     const [itens, setItens] = useState([]);
@@ -10,13 +12,16 @@ function EstoquePage() {
     const [erro, setErro] = useState(null);
     const [modoFiltrado, setModoFiltrado] = useState(false);
     const [termoBusca, setTermoBusca] = useState("");
+    const [message, setMessage] = useState("");
 
-    // Carrega estoque "cru" (só itens ativos, sem outros filtros)
+    const [modalAberto, setModalAberto] = useState(false);
+    const [itemSelecionado, setItemSelecionado] = useState(null);
+
     async function carregarEstoque() {
         try {
             setCarregando(true);
             setErro(null);
-            const itensDados = await buscarItens({ ativo: true }); // ✅ Só ativos
+            const itensDados = await buscarItens({ ativo: true });
             setItens(itensDados);
             setModoFiltrado(false);
         } catch (e) {
@@ -25,34 +30,6 @@ function EstoquePage() {
             setCarregando(false);
         }
     }
-
-    // Aplica filtros (mantém ativo=true fixo)
-    async function handleFiltrar(filtros) {
-        try {
-            setCarregando(true);
-            setErro(null);
-
-            const filtrosFormatados = {
-                ...filtros,
-                ativo: true,  // ✅ Força sempre ativo=true na página de estoque
-                dataInicio: filtros.dataInicio ? `${filtros.dataInicio}:00` : null,
-                dataFim: filtros.dataFim ? `${filtros.dataFim}:00` : null
-            };
-
-            const itensFiltrados = await buscarItens(filtrosFormatados);
-            setItens(itensFiltrados);
-            setModoFiltrado(true);
-        } catch (e) {
-            setErro("Erro ao aplicar filtros: " + e.message);
-        } finally {
-            setCarregando(false);
-        }
-    }
-
-    function handleLimpar() {
-        carregarEstoque();
-    }
-
     async function handleBuscar() {
         try {
             setCarregando(true);
@@ -75,7 +52,34 @@ function EstoquePage() {
     }
     function handleLimparBusca() {
         setTermoBusca("");
-        carregarTodos();
+        carregarEstoque();
+    }
+
+
+    async function handleFiltrar(filtros) {
+        try {
+            setCarregando(true);
+            setErro(null);
+
+            const filtrosFormatados = {
+                ...filtros,
+                ativo: true,
+                dataInicio: filtros.dataInicio ? `${filtros.dataInicio}:00` : null,
+                dataFim: filtros.dataFim ? `${filtros.dataFim}:00` : null
+            };
+
+            const itensFiltrados = await buscarItens(filtrosFormatados);
+            setItens(itensFiltrados);
+            setModoFiltrado(true);
+        } catch (e) {
+            setErro("Erro ao aplicar filtros: " + e.message);
+        } finally {
+            setCarregando(false);
+        }
+    }
+
+    function handleLimpar() {
+        carregarEstoque();
     }
 
     async function handlerDeletar(id) {
@@ -84,6 +88,27 @@ function EstoquePage() {
             carregarEstoque();
         } catch (e) {
             setErro("Erro ao deletar item");
+        }
+    }
+
+    // NOVO: Modal
+    function handleAbrirModal(item) {
+        setItemSelecionado(item);
+        setModalAberto(true);
+    }
+
+    function handleFecharModal() {
+        setModalAberto(false);
+        setItemSelecionado(null);
+    }
+
+    async function handleRegistrarMovimentacao(form) {
+        try {
+            await registrarMovimentacao(form);
+            setMessage("Movimentação do item " + form.nomeItem + " foi realizada com sucesso!");
+            carregarEstoque();
+        } catch (e) {
+            setMessage("Erro ao registrar movimentação do item " + form.nomeItem + ".");
         }
     }
 
@@ -98,11 +123,11 @@ function EstoquePage() {
     return (
         <div>
             <h1>Itens presentes no estoque</h1>
-            <div style={{ 
-                marginBottom: "20px", 
-                padding: "15px", 
-                backgroundColor: "#f0f0f0", 
-                borderRadius: "8px" 
+            <div style={{
+                marginBottom: "20px",
+                padding: "15px",
+                backgroundColor: "#f0f0f0",
+                borderRadius: "8px"
             }}>
                 <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                     <input
@@ -149,16 +174,16 @@ function EstoquePage() {
                     </button>
                 </div>
                 <small style={{ color: "#666", marginTop: "5px", display: "block" }}>
-                    Busca por nome (parcial) • Pressione Enter ou clique em Buscar
+                    Busca por nome (parcial).
                 </small>
             </div>
-
+            
             <FiltroPanel onFiltrar={handleFiltrar} onLimpar={handleLimpar} />
-
+            <p>{message}</p>
             <p style={{ fontStyle: "italic", color: "#666" }}>
                 {modoFiltrado
-                    ? `Mostrando ${itens.length} item(ns) filtrado(s)`
-                    : `Mostrando todos os ${itens.length} itens no estoque`
+                    ? `Mostrando ${itens.length} item(ns) filtrado(s) (apenas ativos)`
+                    : `Mostrando todos os ${itens.length} itens no estoque (ativos)`
                 }
             </p>
 
@@ -167,7 +192,20 @@ function EstoquePage() {
             {itens.length === 0 ? (
                 <p>Nenhum item encontrado.</p>
             ) : (
-                <EstoqueTabela itens={itens} onDeletar={handlerDeletar} />
+                <EstoqueTabela
+                    itens={itens}
+                    onDeletar={handlerDeletar}
+                    onMovimentar={handleAbrirModal}  // NOVO
+                />
+            )}
+
+            {/* MODAL */}
+            {modalAberto && itemSelecionado && (
+                <MovimentacaoModal
+                    item={itemSelecionado}
+                    onFechar={handleFecharModal}
+                    onRegistrar={handleRegistrarMovimentacao}
+                />
             )}
         </div>
     );

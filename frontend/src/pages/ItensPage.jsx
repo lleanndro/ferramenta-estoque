@@ -1,20 +1,25 @@
 import { useEffect, useState } from "react";
 import ItemTabela from "../components/ItemTabela";
+import MovimentacaoModal from "../components/MovimentacaoModal";
 import { deletarItem } from "../services/itemService";
 import { buscarItens } from "../services/buscaService";
+import { registrarMovimentacao } from "../services/movimentacaoService";
 
 function ItensPage() {
     const [itens, setItens] = useState([]);
     const [carregando, setCarregando] = useState(false);
     const [erro, setErro] = useState(null);
     const [termoBusca, setTermoBusca] = useState("");
+    
+    // Estados do modal
+    const [modalAberto, setModalAberto] = useState(false);
+    const [itemSelecionado, setItemSelecionado] = useState(null);
 
-    // Carrega todos os itens (sem filtro de ativo)
     async function carregarTodos() {
         try {
             setCarregando(true);
             setErro(null);
-            const resultado = await buscarItens({ ativo: null }); // null = todos
+            const resultado = await buscarItens({ ativo: null });
             setItens(resultado);
         } catch (e) {
             setErro("Erro ao carregar itens: " + e.message);
@@ -23,14 +28,13 @@ function ItensPage() {
         }
     }
 
-    // Busca por nome
     async function handleBuscar() {
         try {
             setCarregando(true);
             setErro(null);
             const resultado = await buscarItens({ 
                 nome: termoBusca,
-                ativo: null  // Busca em todos (ativos e inativos)
+                ativo: null
             });
             setItens(resultado);
         } catch (e) {
@@ -40,14 +44,12 @@ function ItensPage() {
         }
     }
 
-    // Busca ao digitar Enter
     function handleKeyPress(e) {
         if (e.key === 'Enter') {
             handleBuscar();
         }
     }
 
-    // Limpar busca
     function handleLimpar() {
         setTermoBusca("");
         carregarTodos();
@@ -56,7 +58,6 @@ function ItensPage() {
     async function handlerDeletar(id) {
         try {
             await deletarItem(id);
-            // Recarrega após deletar
             if (termoBusca) {
                 handleBuscar();
             } else {
@@ -64,6 +65,35 @@ function ItensPage() {
             }
         } catch (e) {
             setErro("Erro ao deletar item");
+        }
+    }
+
+    // NOVO: Abre modal
+    function handleAbrirModal(item) {
+        setItemSelecionado(item);
+        setModalAberto(true);
+    }
+
+    // NOVO: Fecha modal
+    function handleFecharModal() {
+        setModalAberto(false);
+        setItemSelecionado(null);
+    }
+
+    // NOVO: Registra movimentação
+    async function handleRegistrarMovimentacao(form) {
+        try {
+            await registrarMovimentacao(form);
+            alert("Movimentação registrada com sucesso!");
+            
+            // Recarrega a lista
+            if (termoBusca) {
+                handleBuscar();
+            } else {
+                carregarTodos();
+            }
+        } catch (e) {
+            alert("Erro ao registrar movimentação: " + e.message);
         }
     }
 
@@ -135,7 +165,6 @@ function ItensPage() {
                 </small>
             </div>
 
-            {/* Contador */}
             <p style={{ fontStyle: "italic", color: "#666" }}>
                 {termoBusca 
                     ? `Encontrados ${itens.length} item(ns) com "${termoBusca}"` 
@@ -143,14 +172,25 @@ function ItensPage() {
                 }
             </p>
 
-            {/* Mensagem de erro */}
             {erro && <p style={{ color: "red" }}>{erro}</p>}
 
-            {/* Tabela */}
             {itens.length === 0 ? (
                 <p>Nenhum item encontrado.</p>
             ) : (
-                <ItemTabela itens={itens} onDeletar={handlerDeletar} />
+                <ItemTabela 
+                    itens={itens} 
+                    onDeletar={handlerDeletar}
+                    onMovimentar={handleAbrirModal}  // NOVO
+                />
+            )}
+        
+            {/* MODAL DE MOVIMENTAÇÃO */}
+            {modalAberto && itemSelecionado && (
+                <MovimentacaoModal
+                    item={itemSelecionado}
+                    onFechar={handleFecharModal}
+                    onRegistrar={handleRegistrarMovimentacao}
+                />
             )}
         </div>
     );

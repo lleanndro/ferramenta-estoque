@@ -1,4 +1,4 @@
-function EstoqueTabela({ itens}) {
+function EstoqueTabela({ itens, onDeletar, onMovimentar }) {  // NOVO: onMovimentar
     return (
         <table>
             <thead>
@@ -10,6 +10,7 @@ function EstoqueTabela({ itens}) {
                     <th>Quantidade</th>
                     <th>Preço médio(unitário)</th>
                     <th>Ultimo preço de compra (unitário)</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,10 +23,40 @@ function EstoqueTabela({ itens}) {
                         <td>{item.quantidade}</td>
                         <td>{item.precoMedio}</td>
                         <td>{item.ultimoPreco}</td>
+                        <td>
+                            <button 
+                                onClick={() => onMovimentar(item)}
+                                style={{
+                                    marginRight: "5px",
+                                    padding: "5px 10px",
+                                    backgroundColor: "#2196F3",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "4px",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                📦 Movimentar
+                            </button>
+                            <button 
+                                onClick={() => onDeletar(item.id)}
+                                style={{
+                                    padding: "5px 10px",
+                                    backgroundColor: "#f44336",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "4px",
+                                    cursor: "pointer"
+                                }}
+                            >
+                                🗑️ Excluir
+                            </button>
+                        </td>
                     </tr>
                 ))}
             </tbody>
         </table>
     );
 }
+
 export default EstoqueTabela;
