@@ -5,6 +5,7 @@ import MovimentacaoModal from "../components/MovimentacaoModal";
 import { deletarItem } from "../services/itemService";
 import { buscarItens } from "../services/buscaService";
 import { registrarMovimentacao } from "../services/movimentacaoService";
+import styles from "../styles/EstoquePage.module.css";
 
 function EstoquePage() {
     const [itens, setItens] = useState([]);
@@ -119,163 +120,49 @@ function EstoquePage() {
     }, []);
 
     if (carregando) {
-        return (
-            <div style={{ textAlign: "center", padding: "40px", color: "#6B7280" }}>
-                Carregando itens no estoque...
-            </div>
-        );
+        return <div className={styles.loading}>Carregando itens no estoque...</div>;
     }
 
     return (
         <div>
-            {/* Título */}
-            <h1 style={{
-                fontSize: "28px",
-                fontWeight: "700",
-                color: "#1A1A1A",
-                marginBottom: "24px",
-                letterSpacing: "-0.5px"
-            }}>
-                Estoque
-            </h1>
+            <h1 className={styles.title}>Estoque</h1>
 
             {/* Search Bar Card */}
-            <div style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: "8px",
-                padding: "24px",
-                marginBottom: "20px",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)"
-            }}>
-                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            <div className={styles.searchCard}>
+                <div className={styles.searchContainer}>
                     <input
                         type="text"
                         placeholder="Buscar por nome do item..."
                         value={termoBusca}
                         onChange={(e) => setTermoBusca(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        style={{
-                            flex: 1,
-                            padding: "12px 16px",
-                            fontSize: "15px",
-                            border: "1px solid #E5E7EB",
-                            borderRadius: "6px",
-                            outline: "none",
-                            transition: "border 0.2s ease",
-                            fontFamily: "inherit"
-                        }}
-                        onFocus={(e) => e.target.style.borderColor = "#6B7280"}
-                        onBlur={(e) => e.target.style.borderColor = "#E5E7EB"}
+                        className={styles.searchInput}
                     />
-                    <button
-                        onClick={handleBuscar}
-                        style={{
-                            padding: "12px 24px",
-                            backgroundColor: "#4A4A4A",
-                            color: "#FFFFFF",
-                            border: "none",
-                            borderRadius: "6px",
-                            cursor: "pointer",
-                            fontWeight: "600",
-                            fontSize: "15px",
-                            transition: "background-color 0.2s ease",
-                            fontFamily: "inherit"
-                        }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = "#2A2A2A"}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = "#4A4A4A"}
-                    >
+                    <button onClick={handleBuscar} className={styles.btnPrimary}>
                         Buscar
                     </button>
-                    <button
-                        onClick={handleLimparBusca}
-                        style={{
-                            padding: "12px 24px",
-                            backgroundColor: "transparent",
-                            color: "#6B7280",
-                            border: "1px solid #E5E7EB",
-                            borderRadius: "6px",
-                            cursor: "pointer",
-                            fontWeight: "500",
-                            fontSize: "15px",
-                            transition: "all 0.2s ease",
-                            fontFamily: "inherit"
-                        }}
-                        onMouseEnter={(e) => {
-                            e.target.style.borderColor = "#6B7280";
-                            e.target.style.color = "#1A1A1A";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.borderColor = "#E5E7EB";
-                            e.target.style.color = "#6B7280";
-                        }}
-                    >
+                    <button onClick={handleLimparBusca} className={styles.btnSecondary}>
                         Limpar
                     </button>
                 </div>
-                <small style={{ 
-                    color: "#6B7280", 
-                    marginTop: "8px", 
-                    display: "block",
-                    fontSize: "13px"
-                }}>
-                    Busca por nome (parcial)
-                </small>
+                <small className={styles.searchHint}>Busca por nome (parcial)</small>
             </div>
 
-            {/* Filtro Panel */}
             <FiltroPanel onFiltrar={handleFiltrar} onLimpar={handleLimpar} />
 
-            {/* Messages */}
-            {message && (
-                <div style={{
-                    padding: "12px 16px",
-                    backgroundColor: "#6B8F7A",
-                    color: "#FFFFFF",
-                    borderRadius: "6px",
-                    marginBottom: "16px",
-                    fontSize: "14px"
-                }}>
-                    {message}
-                </div>
-            )}
+            {message && <div className={styles.messageSuccess}>{message}</div>}
 
-            {/* Status */}
-            <p style={{ 
-                fontStyle: "italic", 
-                color: "#6B7280",
-                marginBottom: "16px",
-                fontSize: "14px"
-            }}>
+            <p className={styles.statusText}>
                 {modoFiltrado
                     ? `Mostrando ${itens.length} item(ns) filtrado(s)`
                     : `Mostrando todos os ${itens.length} itens no estoque`
                 }
             </p>
 
-            {erro && (
-                <p style={{ 
-                    color: "#8F6B6B",
-                    backgroundColor: "#FFF5F5",
-                    padding: "12px 16px",
-                    borderRadius: "6px",
-                    marginBottom: "16px"
-                }}>
-                    {erro}
-                </p>
-            )}
+            {erro && <p className={styles.messageError}>{erro}</p>}
 
-            {/* Tabela Card */}
             {itens.length === 0 ? (
-                <div style={{
-                    backgroundColor: "#FFFFFF",
-                    borderRadius: "8px",
-                    padding: "48px 24px",
-                    textAlign: "center",
-                    color: "#6B7280",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.08)"
-                }}>
-                    Nenhum item encontrado.
-                </div>
+                <div className={styles.emptyState}>Nenhum item encontrado.</div>
             ) : (
                 <EstoqueTabela
                     itens={itens}

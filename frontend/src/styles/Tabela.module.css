@@ -1,0 +1,84 @@
+/* src/styles/Tabela.module.css */
+
+.tableCard {
+  background-color: var(--color-card);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.table thead {
+  border-bottom: 2px solid var(--color-border);
+}
+
+.table th {
+  text-align: left;
+  padding: var(--spacing-md);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table td {
+  padding: var(--spacing-md);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.btnAction {
+  padding: 6px 12px;
+  background-color: var(--color-btn-action);
+  color: var(--color-card);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  transition: background-color var(--transition-base);
+}
+
+.btnAction:hover {
+  background-color: var(--color-btn-action-hover);
+}
+
+.btnDelete {
+  padding: 6px 12px;
+  background-color: var(--color-btn-delete);
+  color: var(--color-card);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  transition: background-color var(--transition-base);
+}
+
+.btnDelete:hover {
+  background-color: var(--color-btn-delete-hover);
+}

@@ -1,0 +1,152 @@
+/* src/styles/FiltroPanel.module.css */
+
+.filtroCard {
+  background-color: var(--color-card);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.filtroHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.filtroTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.toggleButton {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: all var(--transition-base);
+}
+
+.toggleButton:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text-primary);
+}
+
+.filtroContent {
+  margin-top: var(--spacing-md);
+}
+
+.formGroup {
+  margin-bottom: var(--spacing-md);
+}
+
+.label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 5px;
+  font-size: var(--font-size-sm);
+}
+
+.input,
+.select {
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 5px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  outline: none;
+  transition: border var(--transition-base);
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--color-border-hover);
+}
+
+.hint {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  margin-top: 4px;
+  display: block;
+}
+
+.divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.inlineGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.inlineGroup .select {
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.dateGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dateGroup input {
+  padding: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.actionButtons {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  gap: 10px;
+}
+
+.btnAplicar {
+  flex: 1;
+  padding: 10px 20px;
+  background-color: var(--color-btn-primary);
+  color: var(--color-card);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  transition: background-color var(--transition-base);
+}
+
+.btnAplicar:hover {
+  background-color: var(--color-btn-primary-hover);
+}
+
+.btnLimpar {
+  flex: 1;
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  transition: all var(--transition-base);
+}
+
+.btnLimpar:hover {
+  border-color: var(--color-border-hover);
+  color: var(--color-text-primary);
+}
